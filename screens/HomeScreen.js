@@ -13,10 +13,8 @@ export default function HomeScreen({ navigation }) {
     const [ currencies, setCurrencies ] = useState([])
     const [ currencyCode, setCurrencyCode ] = useState('CAD')
     const [ amount, setAmount ] = useState('1')
-    const [ prevAmount, setPrevAmount ] = useState('1')
     const [ toCurrency, setToCurrency ] = useState('USD')
-    const [ exchangeRate, setExchangeRate ] = useState('')
-    const [ exchangedAmount, setExchangedAmount ] = useState('')
+    const [ outputMsg, setOutputMsg] = useState(false)
     const [ error, setError ] = useState(false)
     const [ errMessage, setErrorMessage ] = useState('')
 
@@ -29,14 +27,15 @@ export default function HomeScreen({ navigation }) {
 
     const getExchangeRate = async () => {
         setError(false)
+        setOutputMsg(false)
+
         fetch(`https://api.freecurrencyapi.com/v1/latest?apikey=${API_KEY}&base_currency=${currencyCode}&currencies=${toCurrency}`)
         .then((response) => response.json())
         .then((json) => { 
             // Pulls in individual exchange rate
-            setExchangeRate(json.data[toCurrency]); 
-            // Calculates and sets amount
-            setPrevAmount(amount)
-            setExchangedAmount(amount*exchangeRate)
+            const exchangedAmount = amount*json.data[toCurrency]
+            // Calculates and sets message
+            setOutputMsg(`${amount} ${currencyCode} to ${toCurrency}: ${Math.round(exchangedAmount * 100) / 100}`)
         })
         .catch((e) => {
             console.log(e)
@@ -48,20 +47,20 @@ export default function HomeScreen({ navigation }) {
     const getCurrencies = async () => {
         setError(false)
         fetch(`https://api.freecurrencyapi.com/v1/latest?apikey=${API_KEY}`)
-        .then((response) => {
-            // console.log(response)
-            return response.json()
-        })
-        .then((json) => { 
-            // console.log(json.data)
-            setCurrencies(Object.keys(json.data)) 
-        })
-        .catch((e) => {
-            console.log(e)
-            setError(true);
-            setErrorMessage('Error retrieving currencies');
-        })
-      setLoading(false)
+            .then((response) => {
+                // console.log(response)
+                return response.json()
+            })
+            .then((json) => { 
+                // console.log(json.data)
+                setCurrencies(Object.keys(json.data)) 
+            })
+            .catch((e) => {
+                console.log(e)
+                setError(true);
+                setErrorMessage('Error retrieving currencies');
+            })
+        setLoading(false)
     }
 
   const calculateExchange = () => {
@@ -118,10 +117,9 @@ export default function HomeScreen({ navigation }) {
             title="Calculate" 
             onPress={calculateExchange}
             />
-            {error && (<Text style={styles.error}>{errMessage}</Text>)}
-            {exchangedAmount && <Text style={styles.output}>
-                {prevAmount} {currencyCode} to {toCurrency}: {Math.round(exchangedAmount * 100) / 100}
-            </Text>}
+
+            {error ? <Text style={styles.error}>{errMessage}</Text> : <></>}
+            {outputMsg ? <Text style={styles.output}>{outputMsg}</Text> : <></>}
         </View>
     </View>
   )
