@@ -9,12 +9,13 @@ export default function HomeScreen({ navigation }) {
     const [ currencies, setCurrencies ] = useState([])
     const [ currencyCode, setCurrencyCode ] = useState('CAD')
     const [ amount, setAmount ] = useState('1')
+    const [ prevAmount, setPrevAmount ] = useState('1')
     const [ toCurrency, setToCurrency ] = useState('USD')
     const [ exchangeRate, setExchangeRate ] = useState('')
     const [ exchangedAmount, setExchangedAmount ] = useState('')
     const [ error, setError ] = useState(false)
     const [ errMessage, setErrorMessage ] = useState('')
-    
+
     useEffect(() => {
       navigation.setOptions({
         headerRight: () => <Button title='About' onPress={() => navigation.navigate("AboutScreen")}/>
@@ -27,7 +28,11 @@ export default function HomeScreen({ navigation }) {
         fetch(`https://api.freecurrencyapi.com/v1/latest?apikey=${API_KEY}&base_currency=${currencyCode}&currencies=${toCurrency}`)
         .then((response) => response.json())
         .then((json) => { 
+            // Pulls in individual exchange rate
             setExchangeRate(json.data[toCurrency]); 
+            // Calculates and sets amount
+            setPrevAmount(amount)
+            setExchangedAmount(amount*exchangeRate)
         })
         .catch((e) => {
             console.log(e)
@@ -66,10 +71,9 @@ export default function HomeScreen({ navigation }) {
         setErrorMessage("Missing information, please include all fields")
         return
     }
-    // Pulls in the individual exchange rate
+
+    // Calculation happens in 'getExchangeRate()'
     getExchangeRate()
-    // Calculations
-    setExchangedAmount(amount*exchangeRate)
     return
   }
 
@@ -112,7 +116,7 @@ export default function HomeScreen({ navigation }) {
             />
             {error && (<Text style={styles.error}>{errMessage}</Text>)}
             {exchangedAmount && <Text style={styles.output}>
-                {amount} {currencyCode} to {toCurrency}: {Math.round(exchangedAmount * 100) / 100}
+                {prevAmount} {currencyCode} to {toCurrency}: {Math.round(exchangedAmount * 100) / 100}
             </Text>}
         </View>
     </View>
