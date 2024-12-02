@@ -3,9 +3,11 @@ import { StyleSheet, Button } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-// import MainScreen from './screens/MainScreen';
+// These commented sections are for the project as it was before changes.
+
 import AboutScreen from './screens/AboutScreen';
 import HomeScreen from './screens/HomeScreen';
+// import MainScreen from './screens/MainScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -44,11 +46,3 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

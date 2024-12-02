@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button, TextInput, Switch, Alert } from 'react-native';
 
+// === FLOORING INSTALLATION COSTS CALCULATION PAGE === 
+// [UNUSED, PLEASE SEE 'HomeScreen.js' for current project]
+
 export default function MainScreen({ navigation }) {
 
   useEffect(() => {

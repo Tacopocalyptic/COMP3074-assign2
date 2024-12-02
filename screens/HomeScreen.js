@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button, TextInput, ActivityIndicator } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list'
+// API key stored within a .env file in the root directory of this project.
+// it has been excluded from the upload of this project
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY
+
+// === CURRENCY CONVERSION PAGE ===
 
 export default function HomeScreen({ navigation }) {
 
