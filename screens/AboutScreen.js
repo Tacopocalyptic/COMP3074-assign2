@@ -9,7 +9,7 @@ export default function AboutScreen() {
     return (<View style={styles.container}>
         <Text style={styles.title}>About This App</Text>
         <Text>Josephine Snyder - 101150792</Text>
-        <Text>This app calculates various costs for flooring installation</Text>
+        <Text>This is a basic currency conversion app</Text>
     </View>)
 }
 
